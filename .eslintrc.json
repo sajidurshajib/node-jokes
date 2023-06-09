@@ -1,0 +1,18 @@
+{
+    "extends": [
+      "airbnb-base",
+      "eslint:recommended",
+      "prettier",
+      "plugin:node/recommended"
+    ],
+    "plugins": ["prettier"],
+    "rules": {
+      "prettier/prettier": "error",
+      "no-unused-vars": "warn",
+      "no-console": "off",
+      "semi":"off",
+      "no-param-reassign": 0,
+      "no-useless-constructor": 0,
+      "no-else-return": 0
+    }
+  }
