@@ -5,52 +5,74 @@ class BaseRepo {
         this.Model = Model
     }
 
-    index() {
-        const data = this.Model.find()
-            .then((response) => response)
-            .catch((err) => {
-                throw new AppError(err.message, err.statusCode)
-            })
-        return data
+    async index() {
+        try {
+            const data = await this.Model.find()
+            return data
+        } catch (err) {
+            throw new AppError(err.message, err.statusCode)
+        }
     }
 
-    show(id) {
-        const data = this.Model.findById({ _id: id })
+    async show(id) {
+        const data = await this.Model.findById({ _id: id })
             .then((response) => response)
             .catch((err) => {
                 throw new AppError(
                     `Invalid ${err.stringValue}`
                         .replace(/[{}\\"]/g, '')
                         .trim(''),
-                    404
+                    404,
+                    err.name,
+                    err.path,
+                    err.value
                 )
             })
         return data
     }
 
-    create(data) {
-        const newJoke = new this.Model({
-            title: data.title,
+    async create(data) {
+        const newJoke = await new this.Model({
+            ...data,
         })
 
-        newJoke
+        const joke = await newJoke
             .save()
             .then((result) => result)
-            .catch((err) => new AppError(err.message, err.statusCode))
-        return newJoke
+            .catch((err) => {
+                throw new AppError(err.message, err.statusCode)
+            })
+        return joke
     }
 
-    update(id, data) {
-        this.Model.updateOne({ _id: id }, data)
+    async update(id, data) {
+        const update = await this.Model.updateOne({ _id: id }, data)
             .then((result) => result)
-            .catch((err) => new AppError(err.message, err.statusCode))
-        return this.show(id)
+            .catch((err) => {
+                throw new AppError(
+                    err.message,
+                    err.statusCode,
+                    err.name,
+                    err.path,
+                    err.value
+                )
+            })
+        if (update.acknowledged) return this.show(id)
+        else throw new AppError('Data not updated', 404)
     }
 
     async delete(id) {
         const data = await this.Model.findById({ _id: id })
             .then((result) => result.deleteOne())
-            .catch((err) => new AppError(err.message, err.statusCode))
+            .catch((err) => {
+                throw new AppError(
+                    err.message,
+                    err.statusCode,
+                    err.name,
+                    err.path,
+                    err.value
+                )
+            })
         return data
     }
 }

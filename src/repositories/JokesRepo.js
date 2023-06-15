@@ -1,4 +1,4 @@
-const JokesModel = require('../models/Jokes')
+const Jokes = require('../models/Jokes')
 const BaseRepo = require('./BaseRepo')
 
 class JokesRepo extends BaseRepo {
@@ -8,6 +8,6 @@ class JokesRepo extends BaseRepo {
     }
 }
 
-const jokesRepo = new JokesRepo(JokesModel)
+const jokesRepo = new JokesRepo(Jokes)
 
 module.exports = jokesRepo

@@ -5,9 +5,10 @@ class BaseService {
         this.Repo = Repo
     }
 
-    index() {
+    async index() {
         try {
-            return this.Repo.index()
+            const data = await this.Repo.index()
+            return data
         } catch (err) {
             throw new AppError(err.message, err.statusCode)
         }
@@ -18,11 +19,17 @@ class BaseService {
             const data = await this.Repo.show(id)
             return data
         } catch (err) {
-            throw new AppError(err.message, err.statusCode)
+            throw new AppError(
+                err.message,
+                err.statusCode,
+                err.name,
+                err.path,
+                err.value
+            )
         }
     }
 
-    create(data) {
+    async create(data) {
         try {
             return this.Repo.create(data)
         } catch (err) {
@@ -30,19 +37,31 @@ class BaseService {
         }
     }
 
-    update(id, data) {
+    async update(id, data) {
         try {
             return this.Repo.update(id, data)
         } catch (err) {
-            throw new AppError(err.message, err.statusCode)
+            throw new AppError(
+                err.message,
+                err.statusCode,
+                err.name,
+                err.path,
+                err.value
+            )
         }
     }
 
-    delete(id) {
+    async delete(id) {
         try {
             return this.Repo.delete(id)
         } catch (err) {
-            throw new AppError(err.message, err.statusCode)
+            throw new AppError(
+                err.message,
+                err.statusCode,
+                err.name,
+                err.path,
+                err.value
+            )
         }
     }
 }

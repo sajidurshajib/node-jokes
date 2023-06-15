@@ -1,13 +1,31 @@
 const mongoose = require('mongoose')
 
-const { Schema } = mongoose
-
-const JokesCollection = new Schema({
+const JokesCollection = new mongoose.Schema({
     title: {
         type: String,
+        required: [true, 'Please enter the title.'],
+        trim: true,
+    },
+    joke: {
+        type: String,
+        required: [true, 'Please write your joke here.'],
+        trim: true,
+    },
+    category: {
+        type: String,
+        required: [true, 'Please select the category'],
+        trim: true,
+    },
+    nsfw: {
+        type: Boolean,
+        default: false,
+    },
+    lang: {
+        type: String,
+        required: [true, 'Please select the language'],
     },
 })
 
-const JokesModel = mongoose.model('JokesModel', JokesCollection)
+const Jokes = mongoose.model('Jokes', JokesCollection)
 
-module.exports = JokesModel
+module.exports = Jokes

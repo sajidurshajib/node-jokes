@@ -26,15 +26,17 @@ router
 
 router
     .route('/')
-    .get((req, res, next) => {
-        jokesService
-            .index()
-            .then((data) => res.json({ data }))
-            .catch((e) => next(e))
+    .get(async (req, res, next) => {
+        try {
+            const data = await jokesService.index()
+            res.json({ data })
+        } catch (e) {
+            next(e)
+        }
     })
     .post((req, res, next) => {
         jokesService
-            .create(req.body)
+            .create({ ...req.body })
             .then((data) => res.json({ data }))
             .catch((e) => next(e))
     })
